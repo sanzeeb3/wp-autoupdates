@@ -418,7 +418,7 @@ add_action( is_multisite() ? 'views_plugins-network' : 'views_plugins', 'wp_auto
  * @global int                   $page          The current page of plugins displayed.  Set in WP_Plugins_List_Table::__construct().
  */
 function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
-	global $wp_list_table, $page;
+	global $wp_list_table, $page, $status;
 
 	$custom_statuses = array(
 		'autoupdate_enabled',
@@ -431,6 +431,8 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 		// nothing to do, so bail.
 		return;
 	}
+
+	$status = $_REQUEST['plugin_status'];
 
 	$wp_auto_update_plugins = get_site_option( 'wp_auto_update_plugins', array() );
 	$_plugins = array();
@@ -473,6 +475,7 @@ function wp_autoupdates_plugins_filter_plugins_by_status( $plugins ) {
 	return;
 }
 add_action( 'pre_current_active_plugins', 'wp_autoupdates_plugins_filter_plugins_by_status' );
+add_action( 'check_admin_referer', 'wp_autoupdates_plugins_filter_plugins_by_status' );
 
 /*
  * Populate site health informations
